@@ -3,6 +3,7 @@
 #include <limits.h>
 #include <stdint.h>
 #include <string.h>
+#include <gc.h>
 
 #include "bitset.h"
 
@@ -10,7 +11,7 @@
 bitset_t *bitset_create() {
   bitset_t *bitset = NULL;
   /* Allocate the bitset itself. */
-  if( ( bitset = (bitset_t*) malloc( sizeof( bitset_t ) ) ) == NULL ) {
+  if( ( bitset = (bitset_t*) GC_malloc( sizeof( bitset_t ) ) ) == NULL ) {
       return NULL;
   }
   bitset->array = NULL;
@@ -23,7 +24,7 @@ bitset_t *bitset_create() {
 bitset_t *bitset_create_with_capacity( size_t size ) {
   bitset_t *bitset = NULL;
   /* Allocate the bitset itself. */
-  if( ( bitset = (bitset_t*) malloc( sizeof( bitset_t ) ) ) == NULL ) {
+  if( ( bitset = (bitset_t*) GC_malloc( sizeof( bitset_t ) ) ) == NULL ) {
       return NULL;
   }
   bitset->arraysize = (size + sizeof(uint64_t) * 8 - 1) / (sizeof(uint64_t) * 8);
@@ -39,12 +40,12 @@ bitset_t *bitset_create_with_capacity( size_t size ) {
 bitset_t *bitset_copy( const bitset_t * bitset ) {
   bitset_t *copy = NULL;
   /* Allocate the bitset itself. */
-  if( ( copy = (bitset_t*) malloc( sizeof( bitset_t ) ) ) == NULL ) {
+  if( ( copy = (bitset_t*) GC_malloc( sizeof( bitset_t ) ) ) == NULL ) {
       return NULL;
   }
   memcpy(copy,bitset,sizeof(bitset_t));
   copy->capacity = copy->arraysize;
-  if ((copy->array = (uint64_t *) malloc(sizeof(uint64_t) * bitset->arraysize)) == NULL) {
+  if ((copy->array = (uint64_t *) GC_malloc(sizeof(uint64_t) * bitset->arraysize)) == NULL) {
     free(copy);
     return NULL;
   }
